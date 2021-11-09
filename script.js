@@ -1,33 +1,33 @@
 "use strict"
 
 var canvas = document.getElementById("tela");
-var ctx = canvas.getContext("2d");
-var x=80, y = 50, larg = 50, alt = 35, largMenor = 15, altMenor = 25, farol = 5, angulo = 0;
+var contexto = canvas.getContext("2d");
+var x=80, y = 50, largura = 50, altura = 35, largMenor = 15, altMenor = 25, farol = 5, angulo = 0, velocidade = 5;
 
 var teclas = [];
 
 function desenhar() {
-    ctx.clearRect(0,0, canvas.clientWidth, canvas.height);
-    ctx.fillStyle = "black";
+    contexto.clearRect(0,0, canvas.clientWidth, canvas.height);
+    contexto.fillStyle = "black";
     
     processarTeclas();
     verificarLimites()
-    ctx.save();
+    contexto.save();
 
-    ctx.translate(x,y);
-    ctx.rotate(angulo);
+    contexto.translate(x,y);
+    contexto.rotate(angulo);
 
-    ctx.fillStyle  ='#256EF3';
-    ctx.fillRect(-larg/2, -alt/2, larg, alt);
+    contexto.fillStyle  ='#256EF3';
+    contexto.fillRect(-largura/2, -altura/2, largura, altura);
    
-    ctx.fillStyle ='#E5231C';
-    ctx.fillRect((-larg/2)+45, -(alt/2)+5, farol, farol);
-    ctx.fillRect((-larg/2)+45, -(alt/2)+25, farol, farol);
+    contexto.fillStyle ='#E5231C';
+    contexto.fillRect((-largura/2)+45, -(altura/2)+5, farol, farol);
+    contexto.fillRect((-largura/2)+45, -(altura/2)+25, farol, farol);
 
-    ctx.fillStyle ='#37A6DD';
-    ctx.fillRect((-larg/2)+25, -(alt/2)+5, largMenor, altMenor);
+    contexto.fillStyle ='#37A6DD';
+    contexto.fillRect((-largura/2)+25, -(altura/2)+5, largMenor, altMenor);
 
-    ctx.restore()
+    contexto.restore()
     requestAnimationFrame(desenhar); 
 }
 
@@ -44,27 +44,48 @@ function processarTeclas() {
     }
 
     if (teclas[38]) {
-        x += 5 * Math.cos(angulo);
-        y += 5 * Math.sin(angulo);  //up
+        console.log(velocidade)
+        x += velocidade * Math.cos(angulo);
+        y += velocidade * Math.sin(angulo);  //up
     }
 
     if (teclas[40]) {
-        x -= 5 * Math.cos(angulo);
-        y -= 5 * Math.sin(angulo);  //down
+        x -= velocidade * Math.cos(angulo);
+        y -= velocidade * Math.sin(angulo);  //down
     }
 }
 
 function verificarLimites() {
-    if (x < canvas.width) {
-        x = 0;
+    if (x > canvas.width) {
+        x =40;
+        velocidade = 0;
     }
-    if (y < canvas.height) {
-        y = 0;
+
+    if (y > canvas.height) {
+        
+        y = 55;
+        velocidade = 0;
+    }
+
+    if (y < 0 || x < 0) {
+        
+        y = 55;
+        x =40;
+        velocidade = 0;
     }
 }
 
 document.onkeydown = function (evt) {
     teclas[evt.keyCode] = true;
+    console.log(evt.keyCode)
+
+        if (evt.keyCode == 32) { //enter
+        velocidade ++;
+    }
+
+    if (evt.keyCode == 16) { //shift
+        velocidade --;
+    }
 }
 
 document.onkeyup = function (evt) {
